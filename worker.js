@@ -52,12 +52,12 @@ async function handleRequest (request) {
         let req = await request.json()
         console.log(req["url"])
         if (!await checkURL(req["url"]))
-            return new Response(`{"msg":"非法URL"}`, { status: 400, headers: { "Content-Type": "application/json" } })
+            return new Response(`{"msg":"URL错误"}`, { status: 400, headers: { "Content-Type": "application/json" } })
         let random_key = await save_url(req["url"], req["shortStr"])
         console.log(random_key)
         // 放成功了
         if (Object.prototype.toString.call(random_key) === "[object String]")
-            return new Response(`{"data":{"shortUrl":${random_key}}}`, { status: 200, headers: { "Content-Type": "application/json" } })
+            return new Response(`{"data":{"shortUrl":"${random_key}"}}`, { status: 200, headers: { "Content-Type": "application/json" } })
         // 自定义的路径重复了
         else if (random_key === -1)
             return new Response(`{"msg":"自定义路径已重复"}`, { status: 400, headers: { "Content-Type": "application/json" } })
