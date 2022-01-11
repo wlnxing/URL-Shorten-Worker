@@ -4,7 +4,7 @@ const html404 = `<!DOCTYPE html>
   <p>The url you visit is not found.</p>
 </body>`
 
-const statichtml="";
+const statichtml = "https://wlnxing.github.io/URL-Shorten-Worker/index.html"
 
 
 async function randomString (len) {
@@ -23,26 +23,27 @@ async function checkURL (URL) {
     let objExp = new RegExp(Expression)
     return objExp.test(str) && str[0] === 'h'
 }
-async function save_url (URL, short_url) {
+async function save_url (URL, shortStr) {
+    console.log("shortStr:", shortStr)
     let random_key
-    if (!short_url) {
+    if (!shortStr) {
         random_key = await randomString()
     } else {
-        random_key = short_url
+        random_key = shortStr
     }
     let is_exist = await LINKS.get(random_key)
     console.log(is_exist)
-    if (is_exist == null)
+    if (is_exist == null) {
         // 正常，直接放入
-        return await LINKS.put(random_key, URL), random_key
-    else
-        if (!short_url) {
-            // 生成的random_key重复了，递归调用
-            save_url(URL, null)
-        }
-        else
-            // 自定义的路径已经存在了
-            return -1
+        let stat = await LINKS.put(random_key, URL)
+        if (typeof (stat) === "undefined") return random_key
+        else return stat
+    } else if (!shortStr) {
+        // 生成的random_key重复了，递归调用
+        return save_url(URL, null)
+    } else
+        // 自定义的路径已经存在了
+        return -1
 
 }
 async function handleRequest (request) {
@@ -52,13 +53,15 @@ async function handleRequest (request) {
         console.log(req["url"])
         if (!await checkURL(req["url"]))
             return new Response(`{"msg":"非法URL"}`, { status: 400, headers: { "Content-Type": "application/json" } })
-        let stat, random_key = await save_url(req["url"], req["shortUrl"])
-        console.log(stat)
-        // 放成功了，stat(put返回)为undefined
-        if (typeof (stat) == "undefined")
-            return new Response(`{"data":{"shortUrl":${random_key}}}`,{status:200,headers:{ "Content-Type": "application/json" } })
-        else if (stat === -1)
+        let random_key = await save_url(req["url"], req["shortStr"])
+        console.log(random_key)
+        // 放成功了
+        if (Object.prototype.toString.call(random_key) === "[object String]")
+            return new Response(`{"data":{"shortUrl":${random_key}}}`, { status: 200, headers: { "Content-Type": "application/json" } })
+        // 自定义的路径重复了
+        else if (random_key === -1)
             return new Response(`{"msg":"自定义路径已重复"}`, { status: 400, headers: { "Content-Type": "application/json" } })
+        // 没测试k-v满了之后会怎么样，如果有错的话put时应该会有返回（猜测（懒
         else return new Response(`{"msg":"k-v限额已满，求放过别刷啦"}`, { status: 500, headers: { "Content-Type": "application/json" } })
     }
     const requestURL = new URL(request.url)
