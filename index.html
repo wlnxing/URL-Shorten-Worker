@@ -14,24 +14,28 @@
             height: 100%;
             background-image: linear-gradient(-20deg, #d0b782 20%, #a0cecf 80%)
         }
+
         input[type=text] {
             border: none;
             text-align: center;
             outline: none;
         }
-        body{
+
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .card{
+
+        .card {
             width: 800px;
             background-color: #ebedee;
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid #9b9ea0;
         }
-        h2{
+
+        h2 {
             text-align: center;
             background-color: #dbdfe0a8;
             margin: 0;
@@ -39,17 +43,20 @@
             border-bottom: 1px solid #9b9ea0;
             font-size: 20px;
         }
-        .form-group{
+
+        .form-group {
             padding: 5px 20px 20px 20px;
             box-sizing: border-box;
             width: 100%;
         }
-        .form-group>label{
+
+        .form-group>label {
             width: 100px;
             line-height: 40px;
             font-size: 18px;
         }
-        .form-group>input{
+
+        .form-group>input {
             width: 100%;
             line-height: 28px;
             font-size: 18px;
@@ -57,7 +64,8 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-        .form-group>#submit{
+
+        .form-group>#submit {
             width: 75%;
             line-height: 40px;
             font-size: 18px;
@@ -70,16 +78,16 @@
             margin-top: 20px;
             display: block;
         }
-        
+
 
         /* 遮罩层 */
-        .dialog{
+        .dialog {
             width: 100%;
             height: 100%;
             position: fixed;
             top: 0;
             left: 0;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
             opacity: 0;
             justify-content: center;
@@ -88,8 +96,9 @@
             transition: opacity .4s ease-out, all .2s;
             transform: translateZ(0);
         }
+
         /* 弹窗 */
-        .dialog-content{
+        .dialog-content {
             width: 450px;
             margin-top: 0;
             height: fit-content;
@@ -99,7 +108,8 @@
             border: 1px solid #9b9ea0;
             transition: margin-top .4s ease-out;
         }
-        .dialog-content>.dialog-header{
+
+        .dialog-content>.dialog-header {
             width: 100%;
             padding: 0 20px;
             box-sizing: border-box;
@@ -109,25 +119,29 @@
             display: flex;
             justify-content: space-between;
         }
-        .dialog-content>.dialog-header>.dialog-close{
+
+        .dialog-content>.dialog-header>.dialog-close {
             cursor: pointer;
             /* 不可选中 */
             user-select: none;
         }
-        .dialog-content>.dialog-body{
+
+        .dialog-content>.dialog-body {
             width: 100%;
             padding: 0 20px;
             box-sizing: border-box;
             border-bottom: 1px solid #9b9ea0;
             font-size: 19px;
         }
-        .dialog-content>.dialog-footer{
+
+        .dialog-content>.dialog-footer {
             width: 100%;
             display: flex;
             justify-content: center;
             padding-bottom: 20px;
         }
-        .dialog-content>.dialog-footer>button{
+
+        .dialog-content>.dialog-footer>button {
             width: 90px;
             line-height: 35px;
             font-size: 18px;
@@ -140,12 +154,14 @@
             margin-top: 20px;
             display: block;
         }
+
         /* 显示弹窗 */
-        .dialog-show{
+        .dialog-show {
             opacity: 1;
             z-index: 100;
         }
-        .dialog-show>.dialog-content{
+
+        .dialog-show>.dialog-content {
             margin-top: 20px;
         }
     </style>
@@ -159,11 +175,11 @@
                 <span class="dialog-close">&times;</span>
             </div>
             <div class="dialog-body">
-                <p>短链接：<span id="shortUrl">asdfsadf</span></p>
+                <!-- <p>短链接：<span id="shortUrl"></span></p> -->
             </div>
             <div class="dialog-footer">
                 <!-- 复制按钮 -->
-                <button class="copy" id="copy">复制</button>
+                <!-- <button class="copy" id="copy">复制</button> -->
                 <!-- 确定按钮 -->
                 <!-- <button class="conform" id="conform">确定</button> -->
             </div>
@@ -175,23 +191,22 @@
             <label for="url">长链接:</label>
             <input type="text" id="url" name="url" placeholder="例：https://baidu.com" value="" />
             <label for="shortStr">自定义路径:</label>
-            <input type="text" id="shortStr" name="shortStr" placeholder="例：/wlnxing 为空则自动生成一个" value="" />
+            <input type="text" id="shortStr" name="shortStr" placeholder="例：wlnxing 前面不用加'/' 为空则自动生成一个路径" value="" />
             <input type="button" id="submit" value="提交" />
         </div>
     </div>
-    
+
     <script>
         var dialog = document.querySelector('.dialog');
         var url = document.getElementById('url');
         var shortStr = document.getElementById('shortStr');
         var submit = document.getElementById('submit');
-        submit.onclick = function() {
+        submit.onclick = function () {
             if (url.value == '') {
-                // alert('请输入长链接');
-                dialog.classList.add('dialog-show');
+                alert('请输入长链接');
                 return false;
             }
-            fetch('/post', {
+            fetch('http://r.005522.xyz', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -200,19 +215,71 @@
                     url: url.value,
                     shortStr: shortStr.value
                 })
-            }).then(function(res) {
-                return res.json();
-            }).then(function(data) {
-                if (data.code == 0) {
-                    alert('提交成功，短链接为：' + data.data.shortUrl);
-                } else {
-                    alert(data.msg);
+            }).then(function (res) {
+                if (res.ok)
+                    return res.json();
+                else
+                    throw res;
+            }).then(function (data) {
+                // alert('提交成功，短链接为：' + data.data.shortUrl);
+                // 在弹窗上显示短链接
+
+                dialog.querySelector('.dialog-body').innerHTML =
+                    `<p>短链接：<span id="shortUrl">${location.host}/${data.data.shortUrl}</span></p>`;
+                // 在弹窗上显示复制按钮
+                dialog.querySelector('.dialog-footer').innerHTML =
+                    `<button class="copy" id="copy">复制</button>`;
+
+                // 复制按钮
+                var copy = document.getElementById('copy');
+                copy.onclick = function () {
+                    // 将短链接复制到剪贴板
+                    var shortUrl = document.querySelector('#shortUrl');
+                    try {
+                        let range = document.createRange();
+                        range.selectNode(shortUrl);
+                        window.getSelection().removeAllRanges();
+                        window.getSelection().addRange(range);
+                        document.execCommand('copy');
+                        window.getSelection().removeAllRanges();
+                        console.log('Copy success')
+                    } catch (e) {
+                        console.log('Copy error')
+                    }
                 }
-            }).catch(console.log);
+                // 显示弹窗
+                dialog.classList.add('dialog-show');
+            }).catch(async function (err) {
+                console.log(err);
+                let data;
+                try {
+                    data = await err.json();
+                } catch (e) {
+                    alert('提交失败，请检查网络');
+                    return false
+                }
+                console.log(data);
+                dialog.querySelector('.dialog-body').innerHTML = `<p>${data.msg}</p>`;
+                dialog.querySelector('.dialog-footer').innerHTML =
+                    `<button class="conform" id="conform">确定</button>`;
+                var conform = document.getElementById('conform');
+                conform.onclick = function () {
+                    dialog.classList.remove('dialog-show');
+                }
+                dialog.classList.add('dialog-show');
+            })
         }
         // 关闭按钮
-        document.querySelector('.dialog-close').onclick = function() {
+        document.querySelector('.dialog-close').onclick = function () {
             dialog.classList.remove('dialog-show');
+        }
+        // 点击空白处关闭弹窗
+        dialog.onclick = function (e) {
+            // 阻止事件冒泡
+            e.stopPropagation();
+            if (e.target == dialog) {
+                dialog.classList.remove('dialog-show');
+            }
         }
     </script>
 </body>
