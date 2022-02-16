@@ -164,6 +164,28 @@
         .dialog-show>.dialog-content {
             margin-top: 20px;
         }
+        footer{
+            position: fixed;
+            bottom: 5px;
+            width: 100%;;
+            text-align: center;
+            
+            font-size: 18px;
+        }
+        footer p{
+            color: #666;
+            margin: 0;
+            height: 30px;
+            line-height: 30px;
+        }
+        footer a{
+            color: #666;
+            text-decoration: none;
+        }
+        footer a:hover{
+            color: #61bee9;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -191,10 +213,13 @@
             <label for="url">长链接:</label>
             <input type="text" id="url" name="url" placeholder="例：https://baidu.com" value="" />
             <label for="shortStr">自定义路径:</label>
-            <input type="text" id="shortStr" name="shortStr" placeholder="例：wlnxing 前面不用加'/' 为空则自动生成一个路径" value="" />
+            <input type="text" id="shortStr" name="shortStr" placeholder="例：bai/du 最前面不用加'/' 为空则自动生成一个路径" value="" />
             <input type="button" id="submit" value="提交" />
         </div>
     </div>
+    <footer>
+        <p>author: <a href="https://wlnxing.com">wlnxing</a></p>
+    </footer>
 
     <script>
         var dialog = document.querySelector('.dialog');
