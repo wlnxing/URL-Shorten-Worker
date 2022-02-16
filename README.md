@@ -1,6 +1,14 @@
 # URL-Shorten-Worker
 一个部署在cloudflare-worker上的简单短链程序，可自定义短链的路径，上手简单，适合个人小范围使用。
 
+## 预览
+![image](https://user-images.githubusercontent.com/77608284/154325886-d9b44b56-5b64-4f8e-8b16-59cfbb750f8c.png)
+
+## 用法
+在 "长链接" 框输入要缩短的长链接, 在下面的自定义路径处填写短链接的路径 (没有填写的话会自动生成一个随机路径) , 然后点击提交即可
+
+> 自定义链接的最前面不用加`/` 
+
 ## 部署
 ### 登录cloudflare
  去[cloudflare](https://www.cloudflare.com/zh-cn/)登录或者创建账号，并绑定好域名。 
