@@ -65,7 +65,8 @@ async function handleRequest (request) {
         else return new Response(`{"msg":"k-v限额已满，求放过别刷啦"}`, { status: 500, headers: { "Content-Type": "application/json" } })
     }
     const requestURL = new URL(request.url)
-    const path = requestURL.pathname.split("/")[1]
+    // todo 规范路径的'/'
+    const path = requestURL.pathname.toString().substring(1);
     console.log(path)
     if (!path) {
 
